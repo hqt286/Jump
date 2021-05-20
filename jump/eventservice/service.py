@@ -5,7 +5,6 @@ from eventservice.serializer.EventSerializer import EventSerializer
 
 
 def event_query(request):
-
     if request.method == 'GET':
         location = Location("June St")
         event = Event(createdBy="Tran", location=location)

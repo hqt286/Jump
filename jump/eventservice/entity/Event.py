@@ -15,6 +15,7 @@ class Event:
         self.title = title
         self.description = description
         self.location = location
+
     # organizer
 
     def __str__(self) -> str:
