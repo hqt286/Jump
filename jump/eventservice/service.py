@@ -3,37 +3,49 @@ from eventservice.entity.Event import Event
 from eventservice.entity.Location import Location
 from eventservice.serializer.EventSerializer import EventSerializer
 from eventservice.dao.DanceEventDAO import DanceEventDAO
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework import status
+import json
+
+from rest_framework.response import Response
 
 
-def queryEvents(request):
+@api_view(['GET'])
+def queryEvent(request, id):
     """
     Different way of querying an event will go in here. Assume all the method is GET
     """
-    if request.method != 'GET':
-        return
-
-    id = 123
     event = DanceEventDAO.getById(id)
     serializer = EventSerializer(event)
     return JsonResponse(serializer.data, safe=False)
 
 
+@api_view(['POST'])
 def createEvent(request):
     """
     Endpoint for update or create a event
+    TODO: If the event already id, reject it
+    Think of a way to use geo location to store location
+    https://acloudguru.com/blog/engineering/location-based-search-results-with-dynamodb-and-geohash
     """
-    if request.method != 'POST' or request.method != "PUT":
-        return
-
-    location = Location("June St12")
-    event = Event(createdBy="Tran1", location=location)
-    DanceEventDAO.createOrUpdate(event=event)
+    location = Location("June St")
+    event = Event(createdBy="Tran", location=location)
+    DanceEventDAO.create(event=event)
     serializer = EventSerializer(event)
     return JsonResponse(serializer.data, safe=False)
 
 
-def removeEvent(request):
+@csrf_exempt
+def updateEvent():
+    pass
+
+
+@api_view(['DELETE'])
+def deleteEvent(request, id):
     """
     Endpoint for remove an event. This is only when the user want to remove an event
     """
-    DanceEventDAO.removeById(ID)
+    DanceEventDAO.removeById(int(id))
+    return Response(status=status.HTTP_200_OK)
+

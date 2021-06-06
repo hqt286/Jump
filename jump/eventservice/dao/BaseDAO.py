@@ -15,7 +15,11 @@ class BaseDAO(ABC):
         pass
 
     @abstractmethod
-    def createOrUpdate(self, item):
+    def create(self, item):
+        pass
+
+    @abstractmethod
+    def update(self, item):
         pass
 
     @abstractmethod

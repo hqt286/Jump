@@ -1,5 +1,6 @@
 import boto3
 from botocore.config import Config
+from botocore.exceptions import ClientError
 from eventservice.dao.BaseDAO import BaseDAO
 import os
 import uuid
@@ -16,13 +17,16 @@ class DanceEventDAO(BaseDAO):
     table = dynamodb.Table(DANCE_EVENTS_TABLE)
 
     @classmethod
-    def createOrUpdate(cls, event):
-        if event.id is None:
-            event.id = uuid.uuid1().int
-            serializer = EventSerializer(event)
-            cls.table.put_item(Item=serializer.data)
+    def create(cls, event):
+        print(event)
+        if event.id is not None:
             return
+        event.id = uuid.uuid1().int
+        serializer = EventSerializer(event)
+        cls.table.put_item(Item=serializer.data)
 
+    @classmethod
+    def update(cls, event):
         serializer = EventSerializer(event)
         cls.table.update_item(
             Key={"id": event.id},
@@ -34,13 +38,13 @@ class DanceEventDAO(BaseDAO):
     @classmethod
     def removeById(cls, id):
         # TODO Add safeguard method. This is not completed
-        response = cls.table.delete_item(Key={'id': id})
+        response = cls.table.delete_item(Key={'id': int(id)})
         return response
 
     @classmethod
     def getById(cls, id):
         try:
-            response = cls.table.get_item(Key={'id': id})
+            response = cls.table.get_item(Key={'id': int(id)})
         except ClientError as e:
             print(e.response['Error']['Message'])
         else:
