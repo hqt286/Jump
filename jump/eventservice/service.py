@@ -16,6 +16,7 @@ def queryEvent(request, id):
     """
     Different way of querying an event will go in here. Assume all the method is GET
     """
+    print("> queryEvent")
     event = DanceEventDAO.getById(id)
     serializer = EventSerializer(event)
     return JsonResponse(serializer.data, safe=False)
@@ -29,6 +30,7 @@ def createEvent(request):
     Think of a way to use geo location to store location
     https://acloudguru.com/blog/engineering/location-based-search-results-with-dynamodb-and-geohash
     """
+    print("> createEvent")
     location = Location("June St")
     event = Event(createdBy="Tran", location=location)
     DanceEventDAO.create(event=event)
@@ -46,6 +48,7 @@ def deleteEvent(request, id):
     """
     Endpoint for remove an event. This is only when the user want to remove an event
     """
+    print("< deleteEvent")
     DanceEventDAO.removeById(int(id))
     return Response(status=status.HTTP_200_OK)
 

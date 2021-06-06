@@ -21,7 +21,7 @@ class DanceEventDAO(BaseDAO):
         print(event)
         if event.id is not None:
             return
-        event.id = uuid.uuid1().int
+        event.id = 123
         serializer = EventSerializer(event)
         cls.table.put_item(Item=serializer.data)
 
@@ -43,8 +43,11 @@ class DanceEventDAO(BaseDAO):
 
     @classmethod
     def getById(cls, id):
+        print("Id is: " + str(id))
+        print(id)
         try:
             response = cls.table.get_item(Key={'id': int(id)})
+            print(response)
         except ClientError as e:
             print(e.response['Error']['Message'])
         else:
