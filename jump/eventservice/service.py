@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework import status
 import json
-
+from dateutil import parser
 from rest_framework.response import Response
 
 
@@ -24,17 +24,41 @@ def queryEvent(request, id):
 
 @api_view(['POST'])
 def createEvent(request):
+
+    print("> createEvent")
+    f = open("/home/hungtran/Desktop/bs/randomDances.json")
+    allData = json.load(f)
+
+    events = list()
+    id = 0
+    for data in allData['data']:
+        dateTime = data["dateTime"]
+        genre = data["danceGenres"]
+        eventName = data["eventTitle"]
+        venueName = data["location"]["venueName"]
+        street = data["location"]["street"]
+        city = data["location"]["city"]
+        state = data["location"]["state"]
+        zipCode = data["location"]["zipCode"]
+        latitude = float(data["location"]["latitude"])
+        longtitude = float(data["location"]["longtitude"])
+        dateTime = parser.parse(dateTime)
+        location = Location(venueName=venueName, street=street, city=city, stateName="Virginia", stateCode=state, county="", zipCode=zipCode, countryName="The United State Of America", countryCode="1", latitude=latitude, longitude=longtitude)
+        event = Event(id=id, createdBy="Generator", location=location, eventTime=dateTime, title=eventName, description="")
+        # DanceEventDAO.create(event=event)
+        id = id + 1
+        events.append(event)
+
+    """
+    Store 300 data points in the data base
+    location, genre, time
+    """
     """
     Endpoint for update or create a event
-    TODO: If the event already id, reject it
     Think of a way to use geo location to store location
     https://acloudguru.com/blog/engineering/location-based-search-results-with-dynamodb-and-geohash
     """
-    print("> createEvent")
-    location = Location("June St")
-    event = Event(createdBy="Tran", location=location)
-    DanceEventDAO.create(event=event)
-    serializer = EventSerializer(event)
+    serializer = EventSerializer(events, many=True)
     return JsonResponse(serializer.data, safe=False)
 
 

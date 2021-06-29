@@ -13,8 +13,9 @@ class Location:
     latitude: numbers
     longitude: numbers
 
-    def __init__(self, street=None, city=None, stateName=None, stateCode=None, county=None, zipCode=None,
+    def __init__(self, venueName,street=None, city=None, stateName=None, stateCode=None, county=None, zipCode=None,
                  countryName=None, countryCode=None, latitude=None, longitude=None):
+        self.venueName = venueName
         self.street = street
         self.city = city
         self.stateName = stateName

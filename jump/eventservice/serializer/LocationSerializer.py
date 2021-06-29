@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 
 class LocationSerializer(serializers.Serializer):
+    venueName = serializers.CharField()
     street = serializers.CharField()
     city = serializers.CharField()
     stateName = serializers.CharField()
@@ -10,5 +11,5 @@ class LocationSerializer(serializers.Serializer):
     zipCode = serializers.CharField()
     countryName = serializers.CharField()
     countryCode = serializers.CharField()
-    latitude = serializers.FloatField()
-    longitude = serializers.FloatField()
+    latitude = serializers.DecimalField(max_digits=10, decimal_places=5)
+    longitude = serializers.DecimalField(max_digits=10, decimal_places=5)

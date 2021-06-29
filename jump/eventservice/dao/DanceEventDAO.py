@@ -6,7 +6,7 @@ import os
 import uuid
 from eventservice.serializer.EventSerializer import EventSerializer
 
-os.environ['AWS_PROFILE'] = 'hungtran'
+os.environ['AWS_PROFILE'] = 'default'
 os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
 
 DANCE_EVENTS_TABLE = 'DanceEvents'
@@ -18,10 +18,6 @@ class DanceEventDAO(BaseDAO):
 
     @classmethod
     def create(cls, event):
-        print(event)
-        if event.id is not None:
-            return
-        event.id = 123
         serializer = EventSerializer(event)
         cls.table.put_item(Item=serializer.data)
 
